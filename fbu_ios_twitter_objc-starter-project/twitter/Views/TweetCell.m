@@ -33,12 +33,11 @@
     self.tweetTextLabel.text = tweet.text;
     
     self.profileImage.image = nil;
-    [self.profileImage setImageWithURL:self.tweet.user.profilePicURL];
+    [self.profileImage setImageWithURL:tweet.user.profilePicURL];
     
     self.retweetsLabel.text = [NSString stringWithFormat:@"%d", tweet.retweetCount];
     self.likesLabel.text = [NSString stringWithFormat:@"%d", tweet.favoriteCount];
     self.repliesLabel.text = [NSString stringWithFormat:@"%d", tweet.replyCount];
 }
-
 
 @end
