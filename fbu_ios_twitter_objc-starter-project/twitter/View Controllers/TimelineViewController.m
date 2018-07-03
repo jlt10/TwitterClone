@@ -7,10 +7,11 @@
 //
 
 #import "TimelineViewController.h"
+#import "ComposeViewController.h"
 #import "APIManager.h"
 #import "TweetCell.h"
 
-@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *tweets;
@@ -72,15 +73,20 @@
     return cell;
 }
 
-/*
+- (void)didTweet:(Tweet *)tweet {
+    // Makes new tweet appear at top of screen
+    [self.tweets insertObject:tweet atIndex:0];
+    [self.tableView reloadData];
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    UINavigationController *navigationController = [segue destinationViewController];
+    ComposeViewController *composeController = (ComposeViewController*)navigationController.topViewController;
+    composeController.delegate = self;
 }
-*/
 
 
 @end
