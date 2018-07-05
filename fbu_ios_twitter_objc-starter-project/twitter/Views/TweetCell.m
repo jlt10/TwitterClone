@@ -32,6 +32,7 @@
     self.createdAtLabel.text = tweet.createdAtString;
     
     self.tweetTextLabel.text = tweet.text;
+    [self.tweetTextLabel sizeToFit];
     
     self.profileImage.image = nil;
     [self.profileImage setImageWithURL:tweet.user.profilePicURL];

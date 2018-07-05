@@ -28,7 +28,6 @@
     
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
-    self.tableView.rowHeight = 150;
     
     // REMEMBER ASK WHY/IF NEED TO INITALIZE
     self.tweets = [[NSMutableArray alloc] init];
