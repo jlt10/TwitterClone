@@ -10,6 +10,8 @@
 #import "ComposeViewController.h"
 #import "APIManager.h"
 #import "TweetCell.h"
+#import "AppDelegate.h"
+#import "LoginViewController.h"
 
 @interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
 
@@ -77,6 +79,14 @@
     // Makes new tweet appear at top of screen
     [self.tweets insertObject:tweet atIndex:0];
     [self.tableView reloadData];
+}
+
+- (IBAction)didTapLogout:(id)sender {
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    LoginViewController *loginViewController = [storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    appDelegate.window.rootViewController = loginViewController;
+    [[APIManager shared] logout];
 }
 
 #pragma mark - Navigation
