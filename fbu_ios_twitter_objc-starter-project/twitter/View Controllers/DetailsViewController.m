@@ -9,6 +9,7 @@
 #import "DetailsViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "APIManager.h"
+#import "UserProfileViewController.h"
 
 @interface DetailsViewController ()
 @property (weak, nonatomic) IBOutlet UIImageView *profileImage;
@@ -18,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *numRetweets;
 @property (weak, nonatomic) IBOutlet UILabel *numFavorites;
+@property (weak, nonatomic) IBOutlet UIButton *retweetButton;
+@property (weak, nonatomic) IBOutlet UIButton *favButton;
 
 @end
 
@@ -25,7 +28,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSLog(@"Please tell me something is happening");
+    [self.retweetButton setImage:[UIImage imageNamed:@"retweet-icon-green"] forState:UIControlStateSelected];
+    [self.retweetButton setImage:[UIImage imageNamed:@"retweet-icon"] forState:UIControlStateNormal];
+    self.retweetButton.selected = self.tweet.retweeted;
+    
+    [self.favButton setImage:[UIImage imageNamed:@"favor-icon-red"] forState:UIControlStateSelected];
+    [self.favButton setImage:[UIImage imageNamed:@"favor-icon"] forState:UIControlStateNormal];
+    self.favButton.selected = self.tweet.favorited;
     
     self.nameLabel.text = self.tweet.user.name;
     self.screennameLabel.text = [NSString stringWithFormat:@"@%@", self.tweet.user.screenName];
@@ -36,6 +45,7 @@
     
     self.profileImage.image = nil;
     [self.profileImage setImageWithURL:self.tweet.user.profilePicURL];
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.height/2;
     
     self.numRetweets.text = [NSString stringWithFormat:@"%d", self.tweet.retweetCount];
     self.numFavorites.text = [NSString stringWithFormat:@"%d", self.tweet.favoriteCount];
@@ -108,16 +118,19 @@
 -(void) refreshData {
     self.numRetweets.text = [NSString stringWithFormat:@"%d", self.tweet.retweetCount];
     self.numFavorites.text = [NSString stringWithFormat:@"%d", self.tweet.favoriteCount];
+    
+    self.favButton.selected = self.tweet.favorited;
+    self.retweetButton.selected = self.tweet.retweeted;
 }
 
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    // Pass the selected object to the new view controller.if ([segue.identifier isEqual:@"tweetToProfile"]) {
+    UserProfileViewController *profileController = [segue destinationViewController];
+    profileController.user = self.tweet.user;
 }
-*/
 
 @end

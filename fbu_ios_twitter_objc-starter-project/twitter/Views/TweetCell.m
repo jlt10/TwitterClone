@@ -15,17 +15,27 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     // Initialization code
+     UITapGestureRecognizer *profileTapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(didTapUserProfile:)];
+    [self.profileImage addGestureRecognizer:profileTapGestureRecognizer];
+    [self.profileImage setUserInteractionEnabled:YES];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
-
     // Configure the view for the selected state
 }
 
 -(void)setTweet:(Tweet *)tweet {
     // REMEMBER TO ASK QUESTION WHY TWEET AUTOPROPERTY DIDN'T RUN WHEN "IMPORT TWEET.H" AT THE TOP OF THIS FILE
     _tweet = tweet;
+    
+    [self.retweetButton setImage:[UIImage imageNamed:@"retweet-icon-green"] forState:UIControlStateSelected];
+    [self.retweetButton setImage:[UIImage imageNamed:@"retweet-icon"] forState:UIControlStateNormal];
+    self.retweetButton.selected = tweet.retweeted;
+    
+    [self.favButton setImage:[UIImage imageNamed:@"favor-icon-red"] forState:UIControlStateSelected];
+    [self.favButton setImage:[UIImage imageNamed:@"favor-icon"] forState:UIControlStateNormal];
+    self.favButton.selected = tweet.favorited;
     
     self.nameLabel.text = tweet.user.name;
     self.screennameLabel.text = [NSString stringWithFormat:@"@%@", tweet.user.screenName];
@@ -36,6 +46,7 @@
     
     self.profileImage.image = nil;
     [self.profileImage setImageWithURL:tweet.user.profilePicURL];
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.height/2;
     
     self.retweetsLabel.text = [NSString stringWithFormat:@"%d", tweet.retweetCount];
     self.likesLabel.text = [NSString stringWithFormat:@"%d", tweet.favoriteCount];
@@ -67,7 +78,6 @@
             }
         }];
     }
-    
     [self refreshData];
 }
 
@@ -96,7 +106,6 @@
             }
         }];
     }
-    
     [self refreshData];
 }
 
@@ -105,5 +114,12 @@
     self.retweetsLabel.text = [NSString stringWithFormat:@"%d", self.tweet.retweetCount];
     self.likesLabel.text = [NSString stringWithFormat:@"%d", self.tweet.favoriteCount];
     self.repliesLabel.text = [NSString stringWithFormat:@"%d", self.tweet.replyCount];
+    self.favButton.selected = self.tweet.favorited;
+    self.retweetButton.selected = self.tweet.retweeted;
+}
+
+- (void) didTapUserProfile:(UITapGestureRecognizer *)sender{
+    // TODO: Call method on delegate
+    [self.delegate tweetCell:self didTap:self.tweet.user];
 }
 @end

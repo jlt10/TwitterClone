@@ -13,8 +13,9 @@
 #import "AppDelegate.h"
 #import "LoginViewController.h"
 #import "DetailsViewController.h"
+#import "UserProfileViewController.h"
 
-@interface TimelineViewController () <UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
+@interface TimelineViewController () <TweetCellDelegate, UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *tweets;
@@ -68,6 +69,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     // Dequeue cell
     TweetCell *cell = [tableView dequeueReusableCellWithIdentifier:@"TweetCell" forIndexPath:indexPath];
+    cell.delegate = self;
     
     // Display tweets
     cell.tweet = self.tweets[indexPath.row];
@@ -79,6 +81,14 @@
     // Makes new tweet appear at top of screen
     [self.tweets insertObject:tweet atIndex:0];
     [self.tableView reloadData];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [self.tableView reloadData];
+}
+
+- (void)tweetCell:(TweetCell *) tweetCell didTap: (User *)user {
+    [self performSegueWithIdentifier:@"tweetToProfile" sender:tweetCell];
 }
 
 - (IBAction)didTapLogout:(id)sender {
@@ -111,6 +121,13 @@
         NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
         Tweet *tweet = self.tweets[indexPath.row];
         detailsController.tweet = tweet;
+    }
+    else if ([segue.identifier isEqual:@"tweetToProfile"]) {
+        UserProfileViewController *profileController = [segue destinationViewController];
+        UITableViewCell *tappedCell = sender;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
+        Tweet *tweet = self.tweets[indexPath.row];
+        profileController.user = tweet.user;
     }
 }
 

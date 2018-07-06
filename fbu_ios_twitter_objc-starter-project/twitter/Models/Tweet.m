@@ -46,7 +46,7 @@
         // Numer of seconds (positive) from today to tweet posted
         NSTimeInterval secondsBetween = [[NSDate date] timeIntervalSinceDate:createdAtDate];
         
-        if (secondsBetween <= 28800) {
+        if (secondsBetween <= 259200) {
             self.createdAtString = createdAtDate.shortTimeAgoSinceNow;
         }
         else {
