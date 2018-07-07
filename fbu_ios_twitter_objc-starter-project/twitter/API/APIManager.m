@@ -75,6 +75,34 @@ static NSString * const consumerSecret = @"iHQAjHbVNLqVkQqN7ibQe3bRkIhCpwoB9CxcW
    }];
 }
 
+
+- (void)getHomeTimelineOlderThanID:(NSString *)idStr completion:(void(^)(NSArray *tweets, NSError *error))completion {
+    
+    NSDictionary *parameters = @{@"max_id": idStr};
+    [self GET:@"1.1/statuses/home_timeline.json"
+   parameters:parameters progress:nil success:^(NSURLSessionDataTask * _Nonnull task, NSArray *  _Nullable tweetDictionaries) {
+       
+       // Manually cache the tweets. If the request fails, restore from cache if possible.
+       NSData *data = [NSKeyedArchiver archivedDataWithRootObject:tweetDictionaries];
+       [[NSUserDefaults standardUserDefaults] setValue:data forKey:@"hometimeline_tweets"];
+       
+       NSMutableArray *tweets = [Tweet tweetsWithArray:tweetDictionaries];
+       completion(tweets, nil);
+       
+   } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+       
+       NSArray *tweets = nil;
+       
+       // Fetch tweets from cache if possible
+       NSData *data = [[NSUserDefaults standardUserDefaults] valueForKey:@"hometimeline_tweets"];
+       if (data != nil) {
+           tweets = [Tweet tweetsWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:data]];
+       }
+       
+       completion(tweets, error);
+   }];
+}
+
 - (void)getAccountDetails:(void(^)(User *user, NSError *error))completion {
     
     [self GET:@"1.1/account/verify_credentials.json"

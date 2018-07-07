@@ -15,11 +15,12 @@
 #import "DetailsViewController.h"
 #import "UserProfileViewController.h"
 
-@interface TimelineViewController () <TweetCellDelegate, UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate>
+@interface TimelineViewController () <TweetCellDelegate, UITableViewDataSource, UITableViewDelegate, ComposeViewControllerDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *tweets;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (assign, nonatomic) BOOL isMoreDataLoading;
 
 @end
 
@@ -103,6 +104,37 @@
 {
     //Change the selected background view of the cell.
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if(!self.isMoreDataLoading){
+        // Calculate the position of one screen length before the bottom of the results
+        int scrollViewContentHeight = self.tableView.contentSize.height;
+        int scrollOffsetThreshold = scrollViewContentHeight - self.tableView.bounds.size.height - 50;
+        
+        // When the user has scrolled past the threshold, start requesting
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && self.tableView.isDragging) {
+            self.isMoreDataLoading = YES;
+            [self loadMoreData];
+        }
+    }
+}
+
+-(void)loadMoreData{
+    Tweet *lastTweet = [self.tweets lastObject];
+    NSLog(@"%@", lastTweet.idStr);
+    [[APIManager shared] getHomeTimelineOlderThanID:lastTweet.idStr completion:^(NSArray *tweets, NSError *error) {
+        if (tweets) {
+            for (Tweet *tweet in tweets) {
+                [self.tweets addObject:tweet];
+            }
+            [self.tableView reloadData];
+            self.isMoreDataLoading = NO;
+        } else {
+            NSLog(@"😫😫😫 Error getting home timeline: %@", error.localizedDescription);
+        }
+    }];
 }
 
 #pragma mark - Navigation

@@ -37,7 +37,6 @@
             }
         }];
     }
-    // Do any additional setup after loading the view.
     [self refreshView];
 }
 
@@ -66,7 +65,7 @@
     self.screennameLabel.text = [NSString stringWithFormat:@"@%@", self.user.screenName];
     self.tagLineLabel.text = self.user.tagLine;
     
-    self.numFollowing.text = [NSString stringWithFormat:@"%d", self.user.followingCount];
+    self.numFollowing.text = self.user.followingCount;
     self.numFollowers.text = [NSString stringWithFormat:@"%d", self.user.followerCount];
     self.numTweets.text = [NSString stringWithFormat:@"%d", self.user.tweetCount];
     
