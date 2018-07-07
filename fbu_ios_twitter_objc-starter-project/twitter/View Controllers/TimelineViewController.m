@@ -123,7 +123,6 @@
 
 -(void)loadMoreData{
     Tweet *lastTweet = [self.tweets lastObject];
-    NSLog(@"%@", lastTweet.idStr);
     [[APIManager shared] getHomeTimelineOlderThanID:lastTweet.idStr completion:^(NSArray *tweets, NSError *error) {
         if (tweets) {
             for (Tweet *tweet in tweets) {

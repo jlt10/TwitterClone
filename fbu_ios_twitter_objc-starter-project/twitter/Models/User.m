@@ -19,7 +19,7 @@
         self.profilePicURL = [NSURL URLWithString:dictionary[@"profile_image_url_https"]];
         self.headerPicURL = [NSURL URLWithString:dictionary[@"profile_banner_url"]];
         
-        self.followerCount = dictionary[@"friends_count"];
+        self.followerCount = [dictionary[@"friends_count"] intValue];
         self.followerCount = [dictionary[@"followers_count"] intValue];
         self.tweetCount = [dictionary[@"statuses_count"] intValue];
     }

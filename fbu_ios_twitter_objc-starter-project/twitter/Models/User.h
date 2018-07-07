@@ -15,7 +15,7 @@
 @property (strong, nonatomic) NSString *tagLine;
 @property (strong, nonatomic) NSURL *profilePicURL;
 @property (strong,nonatomic) NSURL *headerPicURL;
-@property (strong, nonatomic) NSString *followingCount;
+@property (nonatomic) int followingCount;
 @property (nonatomic) int followerCount;
 @property (nonatomic) int tweetCount;
 
